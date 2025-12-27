@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <!-- Checks if the email and pass is correct then adds to database then 
+     redirects to login to login to homepage -->
+    <form action="/authentication-signup" method="post">
+      <h1>Username :</h1>
+      <input type="text" name="username" placeholder="username" />
+      <h1>Email :</h1>
+      <input type="email" name="email" placeholder="E-Mail" />
+      <h1>Password :</h1>
+      <input type="password" name="password" placeholder="password" />
+      <input type="submit" value="submit" />
+    </form>
+  </body>
+</html>

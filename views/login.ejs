@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log In</title>
+  </head>
+  <body>
+    <!-- authenticate if the email password is registered within DB at the /authentication
+    and then redirect to homepage-->
+    <form action="/authentication-login" method="post">
+      <h1>Email :</h1>
+      <input type="email" name="email" placeholder="E-Mail" />
+      <h1>Password :</h1>
+      <input type="password" name="password" placeholder="password" />
+      <input type="submit" value="submit" />
+    </form>
+    <p>Don't have an account <a href="/signup">Sign Up</a></p>
+  </body>
+</html>
