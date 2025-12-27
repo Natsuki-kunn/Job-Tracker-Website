@@ -19,7 +19,9 @@ app.get("/login", (req, res) => {
 app.get("/signup", (req, res) => {
   res.render("signup.ejs");
 });
-
+app.get("/dashboard", (req, res) => {
+  res.render("jobs.ejs");
+});
 app.listen(port, () => {
   console.log("Server is running on port " + port);
 });
