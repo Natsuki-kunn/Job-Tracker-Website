@@ -20,7 +20,22 @@ app.get("/signup", (req, res) => {
   res.render("signup.ejs");
 });
 app.get("/dashboard", (req, res) => {
-  res.render("jobs.ejs");
+  res.sendFile(__dirname + "/public/dashboard.html");
+});
+app.get("/create-job", (req, res) => {
+  res.render("create-job.ejs");
+});
+app.get("/update-job", (req, res) => {
+  // instead of rendering a update file just use a popup to update on same page
+  res.render("update-job.ejs");
+});
+app.get("/delete-job", (req, res) => {
+  // instead of rendering a delete file delete on the same page
+  res.render("delete-job.ejs");
+});
+app.post("/authentication-login", (req, res) => {
+  // Authenticate
+  res.redirect("/dashboard");
 });
 app.listen(port, () => {
   console.log("Server is running on port " + port);
