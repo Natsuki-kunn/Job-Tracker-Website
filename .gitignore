@@ -1,0 +1,6 @@
+package.json
+package-lock.json
+node_modules/
+
+*.txt
+# ignores json, modules and all txt files
