@@ -13,5 +13,52 @@
       3.Status(Applied/Interview/Offer/Rejected) 4.Application Date 5.Job Link
       6.Notes
     </p>
+    <form action="/jobs/add" method="post">
+      <!-- 1. Company Name Input -->
+      <div class="form-group">
+        <label for="company-name">Company Name:</label>
+        <input
+          type="text"
+          name="company-name"
+          placeholder="e.g. Google"
+          required
+        />
+      </div>
+      <!-- 2. Job Location -->
+      <div class="form-group">
+        <label for="job-location">Job Location:</label>
+        <select id="job-location" name="job-location" required>
+          <option value="" disabled selected hidden>Select...</option>
+          <option value="remote">On-Site</option>
+          <option value="remote">Remote</option>
+          <option value="remote">Hybrid</option>
+        </select>
+      </div>
+      <!-- 5. application date -->
+      <div class="form-group">
+        <label for="application-date">Application Date:</label>
+        <input type="date" name="date" required />
+      </div>
+      <!-- 4. Status Dropdown -->
+      <div class="form-group">
+        <label for="status">Application Status:</label>
+        <select id="status" name="status" required>
+          <option value="" disabled selected hidden>Select...</option>
+          <option value="applied">Applied</option>
+          <option value="interview">Interview</option>
+          <option value="offer">Offer</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="job-link">Job Link:</label>
+        <input type="text" name="link" placeholder="eg. google.com" />
+      </div>
+      <div class="form-group">
+        <label for="notes">Notes:</label>
+        <input type="text" name="notes" placeholder="eg. priority order" />
+      </div>
+      <button type="submit">Add Job</button>
+    </form>
   </body>
 </html>

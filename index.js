@@ -20,7 +20,7 @@ app.get("/signup", (req, res) => {
   res.render("signup.ejs");
 });
 app.get("/dashboard", (req, res) => {
-  res.sendFile(__dirname + "/public/dashboard.html");
+  res.render("dashboard.ejs");
 });
 app.get("/create-job", (req, res) => {
   res.render("create-job.ejs");
@@ -33,8 +33,16 @@ app.get("/delete-job", (req, res) => {
   // instead of rendering a delete file delete on the same page
   res.render("delete-job.ejs");
 });
-app.post("/authentication-login", (req, res) => {
-  // Authenticate
+app.post("/auth/login", (req, res) => {
+  // Authenticate: check if mail and password is in DB and matches
+  res.redirect("/dashboard");
+});
+app.post("/auth/signup", (req, res) => {
+  // Check if email and password provided is correct
+  res.redirect("/dashboard");
+});
+app.post("/jobs/add", (req, res) => {
+  //process and store the job details in DB and redirect to dashboard
   res.redirect("/dashboard");
 });
 app.listen(port, () => {
