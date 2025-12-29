@@ -22,8 +22,14 @@
       update on a popup instead of redirect and delete on same Page
     </p>
 
-    <a href="/create-job">Add Job</a>
-    <a href="/update-job">Update job</a>
-    <a href="/delete-job">Delete Job</a>
+    <a href="/jobs/create">Add Job</a>
+    <form action="/jobs/update" method="POST">
+      <input type="hidden" name="jobId" value="123" />
+      <button type="submit">Update</button>
+    </form>
+    <form action="/jobs/delete" method="POST">
+      <input type="hidden" name="jobId" value="123" />
+      <button type="submit">Delete</button>
+    </form>
   </body>
 </html>
