@@ -6,30 +6,208 @@
     <title>Dashboard</title>
   </head>
   <body>
-    <h1>Dashboard:</h1>
+    <a href="/logout">Log Out</a>
+    <h1>My Job Dashboard</h1>
     <p>
-      shows and tracks VISUAL DATA of the current jobs and have features to CRUD
-      jobss <br />
-      Dashboard: 1.Total application 2.Status wise count 3.Recent applications
-      4.Pie chart 5.Sort by company/date 6.Search by company/date 7.Filter by
-      Status(Applied/Offer/Interview etc)
+      Filter by:company and application status <br />
+      Update: show a popup <br />
     </p>
-    <h1>Create or Add job :</h1>
-    <p>button on top right</p>
-    <h1>Del and Update job:</h1>
-    <p>
-      buttons next to every job<br />
-      update on a popup instead of redirect and delete on same Page
-    </p>
+    <button class="filter-btn">Filter</button>
+    <!-- Link to create new job (This is fine outside the loop) -->
+    <a href="/jobs/create" style="display: block; margin-bottom: 20px"
+      >+ Add New Job</a
+    >
 
-    <a href="/jobs/create">Add Job</a>
-    <form action="/jobs/update" method="POST">
-      <input type="hidden" name="jobId" value="123" />
-      <button type="submit">Update</button>
-    </form>
-    <form action="/jobs/delete" method="POST">
-      <input type="hidden" name="jobId" value="123" />
-      <button type="submit">Delete</button>
-    </form>
+    <% if (locals.userJobs && userJobs.length > 0) { %>
+
+    <!-- 1. Use .forEach instead of for(var i). It is cleaner and modern JS. -->
+    <% userJobs.forEach(job => { %>
+
+    <!-- 2. WRAPPER: This div represents ONE job (A "Card") -->
+    <div
+      class="job-card-<%= job.jobID %>"
+      style="border: 1px solid black; padding: 10px; margin-bottom: 10px"
+    >
+      <!-- Display Data -->
+      <h3 class="display-company"><%= job.company %></h3>
+      <p class="display-rest">
+        Status: <%= job.status %> Location: <%= job.job_location %> date: <%=
+        job.date %> Link: <%= job.link %> Notes: <%= job.notes %>
+      </p>
+      <p>Ref ID: <%= job.refID %></p>
+
+      <!-- 3. ACTIONS: Forms must be INSIDE the loop -->
+      <div class="actions">
+        <!-- UPDATE: Usually a Link to an edit page -->
+        <!-- We pass the ID in the URL: /jobs/edit/1709234 -->
+        <a href="/jobs/edit/<%= job.jobID %>">Update</a>
+        <!-- diff page for diff jobID  -->
+
+        <button
+          class="edit-btn"
+          data-id="<%= job.jobID %>"
+          data-company="<%= job.company %>"
+          data-job_location="<%= job.job_location %>"
+          data-date="<%= job.date %>"
+          data-status="<%= job.status %>"
+          data-link="<%= job.link %>"
+          data-notes="<%= job.notes %>"
+        >
+          Edit
+        </button>
+
+        <!-- DELETE: A Form is correct here because it modifies data -->
+        <form action="/jobs/delete" method="POST" style="display: inline">
+          <!-- CRITICAL: This injects the SPECIFIC job's ID into the form -->
+          <!-- When you click submit, req.body.jobId will be THIS job's ID -->
+          <input type="hidden" name="jobID" value="<%= job.jobID %>" />
+          <!-- type is hidden to pass the jobID through the post req to delete the specific job -->
+
+          <button type="submit">Delete</button>
+        </form>
+        <a href="/jobs/view/<%= job.jobID %>">View Job</a>
+      </div>
+    </div>
+    <% }) %> <% } else { %>
+    <p>No jobs found. Start applying!</p>
+    <% } %>
+    <dialog id="editModal">
+      <!-- action="/jobs/update-api" method="post"  -->
+      <form class="editForm">
+        <!-- 1. Company Name Input -->
+        <div class="form_group">
+          <label for="company_name">Company Name:</label>
+          <input type="text" id="modalCompany" name="company_name" required />
+        </div>
+        <div class="form_group">
+          <label for="job_location">Job Location:</label>
+          <select id="modalLocation" name="job_location" required>
+            <option value="on-site">On-Site</option>
+            <option value="remote">Remote</option>
+            <option value="hybrid">Hybrid</option>
+          </select>
+        </div>
+        <!-- 5. application date -->
+        <div class="form_group">
+          <label for="app_date">Application Date:</label>
+          <input type="date" id="modalDate" name="date" required />
+        </div>
+        <!-- 4. Status Dropdown -->
+        <div class="form_group">
+          <label for="status">Application Status:</label>
+          <select id="modalStatus" name="status" required>
+            <option value="applied">Applied</option>
+            <option value="interview">Interview</option>
+            <option value="offer">Offer</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+        <div class="form_group">
+          <label for="job_link">Job Link:</label>
+          <input type="text" id="modalLink" name="link" />
+        </div>
+        <div class="form_group">
+          <label for="notes">Notes:</label>
+          <input type="text" id="modalNotes" name="notes" />
+        </div>
+        <input type="hidden" id="modalJobID" name="jobID" />
+        <button type="submit" class="submit">Update Job</button>
+      </form>
+    </dialog>
+
+    <dialog class="filterModal">
+      <form class="filterForm">
+        <input type="text" name="filter" class="filter" placeholder="eg. google" />
+        <button type="submit" class="submit">Submit</button>
+      </form>
+    </dialog>
+    <script>
+      const modal = document.getElementById("editModal");
+      const editButtons = document.querySelectorAll(".edit-btn");
+
+      const jobID = document.getElementById("modalJobID");
+      const company = document.getElementById("modalCompany");
+      const job_location = document.getElementById("modalLocation");
+      const date = document.getElementById("modalDate");
+      const status = document.getElementById("modalStatus");
+      const link = document.getElementById("modalLink");
+      const notes = document.getElementById("modalNotes");
+
+      editButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          modal.showModal();
+          jobID.value = btn.getAttribute("data-id");
+          company.value = btn.getAttribute("data-company");
+          job_location.value = btn.getAttribute("data-job_location");
+          date.value = btn.getAttribute("data-date");
+          status.value = btn.getAttribute("data-status");
+          link.value = btn.getAttribute("data-link");
+          notes.value = btn.getAttribute("data-notes");
+        });
+      });
+      document
+        .querySelector(".editForm")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          /**
+                 This line tells the browser: "Do NOT use the HTML Form to send
+                 data. Do NOT reload the page. I will handle this manually."
+      If you deleted this line, the browser would use the HTML Form, the page
+      would reload, and the Fetch API code below it would never run (because the
+      page died and refreshed).
+                */
+          const data = {
+            jobID: jobID.value,
+            company_name: company.value,
+            date: date.value,
+            status: status.value,
+            job_location: job_location.value,
+            link: link.value,
+            notes: notes.value,
+          };
+          try {
+            const response = await fetch("/jobs/update-api", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
+            const result = await response.json(); //parses the json to js value(object arr etc)
+            if (result.success) {
+              const card = document.querySelector(".job-card-" + data.jobID);
+              //the specific job card we want to update
+              if (card) {
+                card.querySelector(".display-company").innerText =
+                  data.company_name;
+                card.querySelector(
+                  ".display-rest"
+                ).innerText = `Status: ${data.status} Location: ${data.job_location} 
+                date: ${data.date} Link: ${data.link} Notes: ${data.notes}`;
+
+                const btn = card.querySelector(".edit-btn");
+                btn.setAttribute("data-company", data.company_name);
+                btn.setAttribute("data-date", data.date);
+                btn.setAttribute("data-job_location", data.job_location);
+                btn.setAttribute("data-status", data.status);
+                btn.setAttribute("data-link", data.link);
+                btn.setAttribute("data-notes", data.notes);
+              }
+              modal.close();
+            } else {
+              alert("Error: " + result.message);
+            }
+          } catch (err) {
+            console.log(err);
+            alert("Something went wrong!");
+          }
+        });
+
+      document.querySelector(".filter-btn").addEventListener("click", () => {
+        document.querySelector(".filterModal").showModal();
+      });
+      document.querySelector(".filterForm").addEventListener("submit",(event)=>{
+        event.preventDefault();
+        
+      });
+    </script>
   </body>
 </html>
